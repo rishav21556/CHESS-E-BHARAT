@@ -13,148 +13,39 @@ import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 
+/*
+Baby Blue
+#68bbe3
+
+Blue Grotto
+#0e86d4
+
+Blue
+#055c9d
+
+Navy Blue
+#003060
+*/
+
 export default function LoginPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login, user, loading } = useAuth()
-  const [formData, setFormData] = useState({
-    user_name: "",
-    password: "",
-  })
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
+  return (
+    <div className="bg-[url('/Main-background.jpg')] bg-cover h-[100vh] w-full bg-center ">
+      <div className="flex flex-col items-center h-full bg-black/50">
+        <div className="mt-5">
+          <img src="/Logo.png" alt="Logo" className="w-auto h-32" />
+        </div>
+        <div className="flex flex-col mt-2 bg-[#003060]/50 px-10 py-5 rounded-lg gap-2">
+          <input type="text" autoComplete="off" placeholder="Email" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-  useEffect(() => {
-    const message = searchParams.get("message")
-    if (message) {
-      setSuccessMessage(message)
-    }
-  }, [searchParams])
+          <input type="password" autoComplete="off" placeholder="Password" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (!loading && user) {
-      console.log("User already logged in, redirecting to dashboard")
-      router.push("/dashboard")
-    }
-  }, [user, loading, router])
+          <button className="bg-[#055c9d] text-white py-2 px-4 rounded-lg hover:bg-[#3f92bc]">Login</button>
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-
-    // Clear error when user starts typing
-    if (error) {
-      setError("")
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form submitted")
-    setIsLoading(true)
-    setError("")
-
-    if (!formData.user_name.trim() || !formData.password.trim()) {
-      setError("Please fill in all fields")
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      console.log("Calling login function...")
-      await login(formData.user_name, formData.password)
-      console.log("Login successful, redirecting...")
-      router.push("/dashboard")
-    } catch (error) {
-      console.log("Login failed:", error)
-      setError(error instanceof Error ? error.message : "Login failed")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Show loading while checking auth
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <Link href="/register" className="text-white/70 hover:text-white text-sm mt-2 text-center">Don't have an account? Sign up</Link>
         </div>
       </div>
-    )
-  }
-
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background relative">
-      <header className="absolute top-0 right-0 p-4">
-        <ThemeToggle />
-      </header>
-      <Card className="mx-auto max-w-sm w-full">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your credentials to sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            {successMessage && (
-              <Alert>
-                <AlertDescription>{successMessage}</AlertDescription>
-              </Alert>
-            )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="grid gap-2">
-              <Label htmlFor="user_name">Username</Label>
-              <Input
-                id="user_name"
-                name="user_name"
-                type="text"
-                placeholder="Enter your username"
-                value={formData.user_name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
-            </Button>
-          </form>
-
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
-              Sign up
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
