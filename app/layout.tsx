@@ -29,6 +29,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=0.5" />
+        <title>ChessMaster</title>
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
