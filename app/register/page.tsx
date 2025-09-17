@@ -2,174 +2,58 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { authApi, validatePassword, type RegisterData } from "@/lib/auth"
+import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
-export default function RegisterPage() {
-  const router = useRouter()
-  const [formData, setFormData] = useState<RegisterData>({
-    user_name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  })
-  const [errors, setErrors] = useState<string[]>([])
-  const [loading, setLoading] = useState(false)
+/*
+Baby Blue
+#68bbe3
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+Blue Grotto
+#0e86d4
 
-    // Clear errors when user starts typing
-    if (errors.length > 0) {
-      setErrors([])
-    }
-  }
+Blue
+#055c9d
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setErrors([])
+Navy Blue
+#003060
+*/
 
-    // Validate form
-    const newErrors: string[] = []
-
-    if (!formData.user_name.trim()) {
-      newErrors.push("Username is required")
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.push("Email is required")
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.push("Please enter a valid email address")
-    }
-
-    // Validate password
-    const passwordErrors = validatePassword(formData.password)
-    newErrors.push(...passwordErrors)
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.push("Passwords do not match")
-    }
-
-    if (newErrors.length > 0) {
-      setErrors(newErrors)
-      setLoading(false)
-      return
-    }
-
-    try {
-      await authApi.register(formData)
-      router.push("/login?message=Registration successful! Please log in.")
-    } catch (error) {
-      setErrors([error instanceof Error ? error.message : "Registration failed"])
-    } finally {
-      setLoading(false)
-    }
-  }
-
+export default function LoginPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background relative">
-      <header className="absolute top-0 right-0 p-4">
-        <ThemeToggle />
-      </header>
-      <Card className="mx-auto max-w-sm w-full">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription>Enter your details to create a new account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            {errors.length > 0 && (
-              <Alert variant="destructive">
-                <AlertDescription>
-                  <ul className="list-disc list-inside space-y-1">
-                    {errors.map((error, index) => (
-                      <li key={index} className="text-sm">
-                        {error}
-                      </li>
-                    ))}
-                  </ul>
-                </AlertDescription>
-              </Alert>
-            )}
+    <div className="bg-[url('/Main-background.jpg')] bg-cover h-[100vh] w-full bg-center ">
+      <div className="flex flex-col items-center h-full bg-black/50">
+        <div className="mt-5">
+          <img src="/Logo.png" alt="Logo" className="w-auto h-32" />
+        </div>
+        <div className="flex flex-col sm:mt-2 mt-10 bg-[#003060]/50 px-10 py-5 rounded-lg gap-4 sm:gap-4">
+          <input type="text" autoComplete="off" placeholder="Username" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-            <div className="grid gap-2">
-              <Label htmlFor="user_name">Username</Label>
-              <Input
-                id="user_name"
-                name="user_name"
-                type="text"
-                placeholder="Enter your username"
-                value={formData.user_name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <input type="text" autoComplete="off" placeholder="Email" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="m@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <input type="password" autoComplete="off" placeholder="Password" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <div className="text-xs text-muted-foreground">
-                Password must have 12+ characters with uppercase, lowercase, number, and special character
-              </div>
-            </div>
+          <input type="password" autoComplete="off" placeholder="Confirm Password" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
+          focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
-            <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
+          <button className="bg-[#055c9d] text-white py-2 px-4 rounded-lg hover:bg-[#3f92bc]">Sign Up</button>
 
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+          <Link href="/login" className="text-white/70 hover:text-white text-sm mt-2 text-center">Already have an Account? Sign in</Link>
+        </div>
+      </div>
     </div>
   )
 }
