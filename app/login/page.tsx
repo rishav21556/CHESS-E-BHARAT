@@ -34,7 +34,7 @@ export default function LoginPage() {
         <div className="mt-5">
           <img src="/Logo.png" alt="Logo" className="w-auto h-32" />
         </div>
-        <div className="flex flex-col mt-2 bg-[#003060]/50 px-10 py-5 rounded-lg gap-2">
+        <div className="flex flex-col sm:mt-2 mt-10 bg-[#003060]/50 px-10 py-5 rounded-lg gap-4 sm:gap-4">
           <input type="text" autoComplete="off" placeholder="Email" className="bg-transparent border-[1px] border-[#055c9d] rounded-lg pl-2 pr-10 py-5 text-white placeholder:text-white/70
           focus:outline-none focus:ring-2 focus:ring-[#68bbe3] focus:border-transparent" />
 
